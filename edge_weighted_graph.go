@@ -36,7 +36,7 @@ func newGraph(vertexCount int) *graph {
 }
 
 func (g *graph) addEdge(e edge) {
-	g.adjList[e.from()] = append(g.adjList[e.from()], e)
+	g.adjList[e.from()][e.to()] = e
 }
 
 func (g *graph) adjacent(v int) []edge {

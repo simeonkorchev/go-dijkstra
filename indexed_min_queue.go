@@ -56,6 +56,9 @@ func (i *indexedMinQueue) sink(k int) {
 		if i.data[k].val < i.data[index].val {
 			return
 		}
+		if k == 0 && index == k {
+			break
+		}
 		i.dataToIndex[i.data[k]] = index
 		i.dataToIndex[i.data[index]] = k
 		i.data[index], i.data[k] = i.data[k], i.data[index]
@@ -90,10 +93,6 @@ func (i *indexedMinQueue) decreaseKey(kv keyVal, newVal int) {
 
 func (i *indexedMinQueue) contains(e keyVal) bool {
 	_, ok := i.keyMap[e.key]
-	//if !ok {
-	//	return false
-	//}
-	//_, ok = i.dataToIndex[e]
 	return ok
 }
 

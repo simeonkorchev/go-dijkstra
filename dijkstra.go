@@ -37,7 +37,6 @@ func newShortestPathFinder(source int, g *graph) shortestPathFinder {
 		keyMap:      make(map[int]struct{}),
 	}
 
-	visited := make([]bool, g.vertexCount())
 	distTo := make([]int, g.vertexCount())
 	edges := make([]edge, g.vertexCount())
 	for i := 0; i < g.vertexCount(); i++ {
@@ -50,10 +49,6 @@ func newShortestPathFinder(source int, g *graph) shortestPathFinder {
 	})
 	for !queue.isEmpty() {
 		v := queue.deleteMin()
-		if visited[v.key] {
-			continue
-		}
-		visited[v.key] = true
 		for _, edge := range g.adjacent(v.key) {
 			if edge.isEmpty() {
 				continue
@@ -70,17 +65,19 @@ func newShortestPathFinder(source int, g *graph) shortestPathFinder {
 
 func relax(queue *indexedMinQueue, e edge, distTo []int, edges []edge) {
 	v, w := e.from(), e.to()
-	if distTo[w] > distTo[v]+e.weight() {
-		distTo[w] = distTo[v] + e.weight()
-		edges[w] = e
-	}
 	kv := keyVal{
 		key: w,
 		val: distTo[w],
 	}
+	if distTo[w] > distTo[v]+e.weight() {
+		distTo[w] = distTo[v] + e.weight()
+		edges[w] = e
+	}
+
 	if queue.contains(kv) {
 		queue.decreaseKey(kv, distTo[w])
 	} else {
+		kv.val = distTo[w]
 		queue.insert(kv)
 	}
 }
